@@ -1,0 +1,29 @@
+{
+  "name": "mean-app",
+  "version": "1.0.0",
+  "description": "MEAN stack application",
+  "main": "app.js",
+  "scripts": {
+    "start": "nodejs app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jonnybach/mean-stack-app.git"
+  },
+  "keywords": [
+    "mean"
+  ],
+  "author": "Jonathan Bachmann",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jonnybach/mean-stack-app/issues"
+  },
+  "homepage": "https://github.com/jonnybach/mean-stack-app#readme",
+  "dependencies": {
+    "express": "^4.15.4"
+  },
+  "devDependencies": {
+    "mocha": "^3.5.0"
+  }
+}
