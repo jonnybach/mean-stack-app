@@ -1,3 +1,4 @@
+/*  example of using native mongodb library to connect to database */
 var mongoClient = require('mongodb').MongoClient;
 var dburl = 'mongodb://localhost:27017/meanhotel';
 
@@ -22,4 +23,4 @@ var get = function() {
 module.exports = {
     open: open,
     get: get
-}
+};

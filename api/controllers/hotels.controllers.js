@@ -1,6 +1,8 @@
 var dbconn = require('../data/dbconnection.js');
-var hotelData = require('../data/hotel-data.json');
+//var hotelData = require('../data/hotel-data.json');  Replaced with db connection, this is just simple example with json
 var ObjectId = require('mongodb').ObjectId;
+
+
 
 module.exports.hotelsGetAll = function(req, res) {
 
@@ -27,7 +29,7 @@ module.exports.hotelsGetAll = function(req, res) {
                 .json(docs);
         }
     );
-}
+};
 
 module.exports.hotelsGetOne = function(req, res) {
 
@@ -43,7 +45,7 @@ module.exports.hotelsGetOne = function(req, res) {
                 .status(200)
                 .json(doc);
         });
-}
+};
 
 module.exports.hotelsAddOne = function(req, res) {
 
@@ -73,4 +75,4 @@ module.exports.hotelsAddOne = function(req, res) {
             .json({message: 'Required data missing from body'});
     }
 
-}
+};
