@@ -1,13 +1,7 @@
-var dbconn = require('../data/dbconnection.js');
-//var hotelData = require('../data/hotel-data.json');  Replaced with db connection, this is just simple example with json
-var ObjectId = require('mongodb').ObjectId;
-
-
+var mongoose = require('mongoose');
+var Hotel = mongoose.model('Hotel');
 
 module.exports.hotelsGetAll = function(req, res) {
-
-    var db = dbconn.get();
-    var collection = db.collection('hotels');
 
     var offset = 0;
     var count = 5;
@@ -18,29 +12,27 @@ module.exports.hotelsGetAll = function(req, res) {
         count = parseInt(req.query.count, 10);
     }
 
-    collection
+    Hotel
         .find()
         .skip(offset)
         .limit(count)
-        .toArray(function(err, docs) {
-            console.log("Found hotels", docs);
+        .exec(function(err, hotels) {
+            console.log('Found hotels', hotels.length);
             res
                 .status(200)
-                .json(docs);
-        }
-    );
+                .json(hotels);
+        });
+
 };
 
 module.exports.hotelsGetOne = function(req, res) {
 
-    var db = dbconn.get();
-    var collection = db.collection('hotels');
-
     var hotelId = req.params.hotelId;
     console.log("GET the hotel id " + hotelId);
 
-    collection
-        .findOne({'_id': ObjectId(hotelId)}, function(err, doc){
+    Hotel
+        .findById(hotelId)
+        .exec(function(err, doc) {
             res
                 .status(200)
                 .json(doc);
