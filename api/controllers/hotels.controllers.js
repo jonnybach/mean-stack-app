@@ -6,6 +6,16 @@ var runGeoQuery = function(req, res) {
     var lat = parseFloat(req.query.lat);
     var long = parseFloat(req.query.long);
 
+    // Validate query params
+    if (isNaN(lat) || isNaN(long)) {
+        res
+            .status(400)
+            .json({
+                "message": "If supplied in query string, lat and long should be floats."
+            });
+        return;
+    }
+
     // geoJSON point
     var point = {
         type: "Point",
@@ -22,9 +32,16 @@ var runGeoQuery = function(req, res) {
         .geoNear(point, geoOptions, function(err, results, stats) {
             console.log('Geo results', results);
             console.log('Geo stats', stats);
-            res
-                .status(200)
-                .json(results)
+            if (err) {
+                console.log('Error finding hotels using geo location')
+                res
+                    .status(500)
+                    .json(err);
+            } else {
+                res
+                    .status(200)
+                    .json(results);
+            }
         });
 
 };
@@ -52,7 +69,7 @@ module.exports.hotelsGetAll = function(req, res) {
         res
             .status(400)
             .json({
-                "message": "If supplied in query string, offset and count sould be integers."
+                "message": "If supplied in query string, offset and count should be integers."
             });
         return;
     }
@@ -97,7 +114,7 @@ module.exports.hotelsGetOne = function(req, res) {
 
             var response = {
                 'status': 200,
-                'doc': doc
+                'message': doc
             };
 
             if (err) {
@@ -105,15 +122,16 @@ module.exports.hotelsGetOne = function(req, res) {
                 response.status = 500;
                 response.message = err;
             } else if (!doc) {
+                console.log('Hotel id not found in database: ', id);
                 response.status = 404;
                 response.message = {
-                    message: 'Hotel ID not found'
+                    message: 'Hotel ID not found ' + hotelId
                 };
             }
 
             res
                 .status(response.status)
-                .json(response.doc);
+                .json(response.message);
 
         });
 };

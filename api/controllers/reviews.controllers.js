@@ -10,10 +10,29 @@ module.exports.reviewsGetAll = function(req, res) {
         .findById(hotelId)
         .select('reviews')
         .exec(function(err, doc) {
-            console.log("Returned doc", doc);
+
+            var response = {
+                'status': 200,
+                'message': []
+            };
+
+            if (err) {
+                console.log('Error finding hotel');
+                response.status = 500;
+                response.message = err;
+            } else if (!doc) {
+                console.log('Hotel id not found in database: ', id);
+                response.status = 404;
+                response.message = {
+                    message: 'Hotel ID not found ' + hotelId
+                };
+            } else {
+                response.message = doc.reviews ? doc.reviews : [];
+            }
+
             res
-                .status(200)
-                .json(doc.reviews);
+                .status(response.status)
+                .json(response.message);
         });
 };
 
@@ -23,17 +42,42 @@ module.exports.reviewsGetOne = function(req, res) {
     console.log("GET the hotel id " + hotelId);
 
     var reviewId = req.params.reviewId;
-    console.log("GET the hotel id " + reviewId);
+    console.log("GET the review id " + reviewId);
 
     Hotel
         .findById(hotelId)
         .select('reviews')
         .exec(function(err, hotel) {
-            console.log("Returned hotel", hotel);
-            var review = hotel.reviews.id(reviewId);
+
+            var response = {
+                'status': 200,
+                'message': {}
+            };
+
+            if (err) {
+                console.log('Error finding hotel');
+                response.status = 500;
+                response.message = err;
+            } else if (!doc) {
+                console.log('Hotel id not found in database: ', id);
+                response.status = 404;
+                response.message = {
+                    message: 'Hotel ID not found ' + hotelId
+                };
+            } else {
+                //Hotel found, get review with id
+                var review = hotel.reviews.id(reviewId);
+                if (!review) {
+                    response.status(404);
+                    response.message = "Review id not found " + reviewId;
+                } else {
+                    response.message = review
+                }
+            }
+
             res
-                .status(200)
-                .json(review);
+                .status(response.status)
+                .json(response.message);
         });
 
 };
