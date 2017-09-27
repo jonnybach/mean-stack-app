@@ -9,26 +9,26 @@ var ctlrReviews = require('../controllers/reviews.controllers');
 
 router
     .route('/hotels')
-    .get(ctlrHotels.hotelsGetAll);
+    .get(ctlrHotels.hotelsGetAll)
+    .post(ctlrHotels.hotelsAddOne);
 
 router
     .route('/hotels/:hotelId')
-    .get(ctlrHotels.hotelsGetOne);
-
-router
-    .route('/hotels/new')
-    .post(ctlrHotels.hotelsAddOne);
+    .get(ctlrHotels.hotelsGetOne)
+    .put(ctlrHotels.hotelsUpdateOne);
 
 
 //Reviews routes
 
 router
     .route('/hotels/:hotelId/reviews')
-    .get(ctlrReviews.reviewsGetAll);
+    .get(ctlrReviews.reviewsGetAll)
+    .post(ctlrReviews.reviewsAddOne);
 
 router
     .route('/hotels/:hotelId/reviews/:reviewId')
-    .get(ctlrReviews.reviewsGetOne);
+    .get(ctlrReviews.reviewsGetOne)
+    .put(ctlrReviews.reviewsUpdateOne);
 
 
 module.exports = router;
