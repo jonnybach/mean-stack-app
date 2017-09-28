@@ -211,3 +211,74 @@ module.exports.reviewsUpdateOne = function(req, res) {
 
         });
 };
+
+var _deleteReview = function(req, res, hotel, reviewId) {
+
+    //Hotel found, update review with id
+    var review = hotel.reviews.id(reviewId);
+    if (!review) {
+        res
+            .status(404)
+            .json({
+                message: "Review id not found " + reviewId
+            });
+    } else {
+        hotel.reviews.id(reviewId).remove();
+
+        //save hotel with removed review
+        hotel.save(function (err, hotelUpdated) {
+            if (err) {
+                res
+                    .status(500)
+                    .json(err);
+            } else {
+                res
+                    .status(204)
+                    .json();
+            }
+        });
+    }
+
+};
+
+module.exports.reviewsDeleteOne = function(req, res) {
+
+    var hotelId = req.params.hotelId;
+    console.log("GET the hotel id " + hotelId);
+
+    var reviewId = req.params.reviewId;
+    console.log("GET the review id " + reviewId);
+
+    Hotel
+        .findById(hotelId)
+        .select('reviews')
+        .exec(function(err, doc) {
+
+            var response = {
+                'status': 200,
+                'message': doc
+            };
+
+            if (err) {
+                console.log('Error finding a hotel');
+                response.status = 500;
+                response.message = err;
+            } else if (!doc) {
+                console.log('Hotel id not found in database: ', id);
+                response.status = 404;
+                response.message = {
+                    message: 'Hotel ID not found ' + hotelId
+                };
+            }
+
+            if (doc) {
+                _deleteReview(req, res, doc, reviewId);
+            } else {
+                res
+                    .status(response.status)
+                    .json(response.message);
+            }
+
+        });
+
+};

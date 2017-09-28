@@ -122,7 +122,7 @@ module.exports.hotelsGetOne = function(req, res) {
                 response.status = 500;
                 response.message = err;
             } else if (!doc) {
-                console.log('Hotel id not found in database: ', id);
+                console.log('Hotel id not found in database: ', hotelId);
                 response.status = 404;
                 response.message = {
                     message: 'Hotel ID not found ' + hotelId
@@ -239,5 +239,25 @@ module.exports.hotelsUpdateOne = function(req, res) {
                 })
 
             }
+        });
+};
+
+module.exports.hotelsDeleteOne = function(req, res) {
+    var hotelId = req.params.hotelId;
+
+    Hotel
+        .findByIdAndRemove(hotelId)
+        .exec(function(err, hotel) {
+
+            if (err) {
+                res
+                    .status(404)
+                    .json(err);
+            } else {
+                res
+                    .status(204)
+                    .json();
+            }
+
         });
 };
